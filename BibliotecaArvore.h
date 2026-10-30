@@ -4,7 +4,7 @@
 typedef struct Equipament
 {
     int codEqp;
-    char[11] apelido;
+    char apelido[11];
 }Eqp;
 
 typedef struct Incidents
@@ -72,25 +72,28 @@ NoArv* aux_insere(NoArv *no, Inc inc)
             {
                 if (Pai->incidente.codUn < inc.codUn)
                 {
-                    if () //direita ou esq
+                    if (Pai -> dir == NULL) //direita ou esq
                     {
-                        
+                        Pai->dir = novo;
+                        flag = 1;
                     }
                     else
                     {
-
+                        Pai = Pai -> dir;
                     }
                 }
                 else
                 {
                     if (Pai->incidente.codUn > inc.codUn)
                     {
-                        if ()
+                        if (Pai -> esq = NULL)
                         {
-
+                            Pai -> esq = novo;
+                            flag = 1;
                         }
                         else
                         {
+                            Pai = Pai->esq;
                             
                         }
                     }
@@ -142,6 +145,32 @@ NoArv* busca (Arv *Arvore, int num)
         return Pai;
     }
     return NULL;
+}
+
+void imprimirIncidente(Inc inc) 
+{
+    switch (inc.gravidade):
+    case 1:
+        printf("\nIncidente : %d, Equipamento: %d, Gravidade: %d - Baixa.", inc.codUn, inc.codEqp, inc.gravidade);
+        break;
+    case 2: 
+        printf("\nIncidente : %d, Equipamento: %d, Gravidade: %d - Media", inc.codUn, inc.codEqp, inc.gravidade);
+        break;
+    case 3:
+        printf("\nIncidente : %d, Equipamento: %d, Gravidade: %d - Alta", inc.codUn, inc.codEqp, inc.gravidade);
+        break;
+    
+}
+
+void imprimirOrdemArv (NoArv *pai)
+{
+    if (pai != NULL)
+    {
+        immprimirOrdemArv(pai->esq);
+        imprimirIncidente(pai->incidente);
+        imprimirOrdemArv(pai->dir);
+    }
+        
 }
 
 
