@@ -1,6 +1,12 @@
 #ifndef BIBLIOTECAARVORE_H_INCLUDED
 #define BIBLIOTECAARVORE_H_INCLUDED
 
+typedef struct Equipament
+{
+    int codEqp;
+    char[11] apelido;
+}Eqp;
+
 typedef struct Incidents
 {
     int codUn;
