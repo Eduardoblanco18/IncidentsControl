@@ -253,4 +253,81 @@ Arv*remover( Arv*RAIZ, int num)
 
 
 
+Lista* CriaLista()
+{
+    Lista *aux;
+    aux = (Lista*)malloc(sizeof(Lista));
+    aux->inicio = NULL;
+    return aux;
+}
+ 
+
+int ListaVazia(Lista *L)
+{
+    if(L->inicio == NULL)
+    {
+        return 1;
+    }
+    return 0;
+}
+ 
+void InsereL_inicio(Lista *velho, int valor)
+{
+    velho->inicio = AuxInsere(velho->inicio, valor);
+}
+ 
+No* AuxInsere(No *antigo, int v)
+{
+    No *novo;
+    novo = (No*)malloc(sizeof(No));
+    novo->info = v;
+    novo->prox = antigo;
+    return novo;
+}
+ 
+
+int RemoverLista(Lista *L, int valor)
+{
+    int removeu;
+    No *ant, *p;
+    ant = NULL;
+    p = L->inicio;
+    while(p != NULL && p->info != valor)
+    {
+        ant = p;
+        p = p->prox;
+    }
+    if(p == NULL)
+    {
+        removeu = 0;
+    }
+    else
+    {
+        if(ant == NULL) 
+        {
+            L->inicio = p->prox;
+        }
+        else 
+        {
+            ant->prox = p->prox;
+        }
+        free(p);
+        removeu = 1;
+    }
+    return removeu;
+}
+ 
+Lista* LiberarLista(Lista *L)
+{
+    No *apag;
+    while(L->inicio != NULL)
+    {
+        apag = L->inicio;
+        L->inicio = L->inicio->prox;
+        free(apag);
+    }
+    free(L);
+    return NULL;
+}
+
 #endif // BIBLIOTECAARVORE_H_INCLUDED
