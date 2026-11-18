@@ -26,6 +26,17 @@ typedef struct Arvore
     NoArv* raiz;
 }Arv;
 
+typedef struct no 
+{
+    int info;
+    struct no* prox;
+}No;
+
+typedef struct lista
+{
+    No *inicio;
+}Lista;
+
 Arv* CriarArvore()
 {
     Arv *aux;
@@ -221,13 +232,15 @@ NoArv*remover_aux(NoArv*pai, int num)
                       else
                       {
                           NoArv*aux;
+                          Inc temp;
                           aux=pai->esq;
                           while(aux->dir!=NULL)
                           {
                               aux=aux->dir;
                           }
-                          pai->incidente.codUn=aux->incidente.codUn;
-                          aux->incidente.codUn=num;
+                          temp = pai->incidente;
+                          pai->incidente = aux->incidente;
+                          aux->incidente = temp;
                           pai->esq=remover_aux(pai->esq,num);
                       }
                   }
@@ -240,14 +253,10 @@ NoArv*remover_aux(NoArv*pai, int num)
 
 Arv*remover( Arv*RAIZ, int num)
 {
-    NoArv*aux=RAIZ->raiz;
-    if(aux->incidente.codUn == num && aux->dir == NULL && aux->esq == NULL)
+    if (!ArvVazia(RAIZ))
     {
-        free(aux);
-        free(RAIZ);
-        return NULL;
+        RAIZ->raiz = remover_aux(RAIZ->raiz, num);
     }
-    RAIZ->raiz=remover_aux(RAIZ->raiz,num);
     return RAIZ;
 }
 
@@ -276,11 +285,6 @@ int ListaVazia(Lista *L)
     return 0;
 }
  
-void InsereL_inicio(Lista *velho, int valor)
-{
-    velho->inicio = AuxInsere(velho->inicio, valor);
-}
- 
 No* AuxInsere(No *antigo, int v)
 {
     No *novo;
@@ -289,6 +293,12 @@ No* AuxInsere(No *antigo, int v)
     novo->prox = antigo;
     return novo;
 }
+void InsereL_inicio(Lista *velho, int valor)
+{
+    velho->inicio = AuxInsere(velho->inicio, valor);
+}
+ 
+
  
 
 int RemoverLista(Lista *L, int valor)
@@ -349,5 +359,46 @@ int buscarLista(Lista *L, int valor)
     }
     return 0;
 }
+
+
+
+// TABELA HASH AQUI:
+
+#define TAM 47
+typedef struct NoEquipamento
+{
+    Eqp equipamento;
+    Lista *incidentes;
+    struct NoEquipamento *prox;
+}NoEqp;
+
+typedef struct TabelaHash
+{
+    Lista *posicao[];
+}Hash;
+int funcaoHash (int codigo)
+{
+    int resto = codigo % TAM;
+    return resto;
+}
+Hash* CriarHash()
+{
+    
+    Hash *aux;
+    aux = (Hash*) malloc (sizeof(Hash));
+    aux->posicao = (NoEqp*)malloc(sizeof(Noeqp));
+
+}
+NoEqp *BuscaEqp(Hash *H, int codigo)
+{
+    NoEqp *aux;
+    
+}
+
+
+
+
+
+
 
 #endif // BIBLIOTECAARVORE_H_INCLUDED
