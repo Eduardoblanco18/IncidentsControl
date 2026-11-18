@@ -26,7 +26,7 @@ typedef struct Arvore
     NoArv* raiz;
 }Arv;
 
-typedef struct no 
+typedef struct no
 {
     int info;
     struct no* prox;
@@ -262,7 +262,15 @@ Arv*remover( Arv*RAIZ, int num)
 
 void liberarArv (NoArv *pai)
 {
-
+    if(pai->dir != NULL)
+    {
+        liberarArv(pai->dir);
+    }
+    if(pai->esq != NULL)
+    {
+        liberarArv(pai->esq);
+    }
+    free(pai);
 }
 
 
@@ -274,7 +282,7 @@ Lista* CriaLista()
     aux->inicio = NULL;
     return aux;
 }
- 
+
 
 int ListaVazia(Lista *L)
 {
@@ -284,7 +292,7 @@ int ListaVazia(Lista *L)
     }
     return 0;
 }
- 
+
 No* AuxInsere(No *antigo, int v)
 {
     No *novo;
@@ -297,9 +305,9 @@ void InsereL_inicio(Lista *velho, int valor)
 {
     velho->inicio = AuxInsere(velho->inicio, valor);
 }
- 
 
- 
+
+
 
 int RemoverLista(Lista *L, int valor)
 {
@@ -318,11 +326,11 @@ int RemoverLista(Lista *L, int valor)
     }
     else
     {
-        if(ant == NULL) 
+        if(ant == NULL)
         {
             L->inicio = p->prox;
         }
-        else 
+        else
         {
             ant->prox = p->prox;
         }
@@ -331,7 +339,7 @@ int RemoverLista(Lista *L, int valor)
     }
     return removeu;
 }
- 
+
 Lista* LiberarLista(Lista *L)
 {
     No *apag;
@@ -351,7 +359,7 @@ int buscarLista(Lista *L, int valor)
     aux = L -> inicio;
     while (aux!=NULL)
     {
-        if (aux->info == valor) 
+        if (aux->info == valor)
         {
             return 1;
         }
@@ -376,23 +384,26 @@ typedef struct TabelaHash
 {
     Lista *posicao[];
 }Hash;
+
 int funcaoHash (int codigo)
 {
     int resto = codigo % TAM;
     return resto;
 }
+
 Hash* CriarHash()
 {
-    
+
     Hash *aux;
     aux = (Hash*) malloc (sizeof(Hash));
     aux->posicao = (NoEqp*)malloc(sizeof(Noeqp));
 
 }
+
 NoEqp *BuscaEqp(Hash *H, int codigo)
 {
     NoEqp *aux;
-    
+
 }
 
 

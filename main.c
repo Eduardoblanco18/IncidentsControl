@@ -71,7 +71,7 @@ int main()
         printf("\n 5 - Excluir um incidente"); //falta função
         printf("\n 6 - Excluir um equipamento"); //falta função
         printf("\n 7 - Pesquisar Incidente"); //falta função
-        printf("\n 8 - Sair"); 
+        printf("\n 8 - Sair");
 
         printf("\n\n==================-------====================");
         printf("\n\nEscolha: ");
@@ -206,7 +206,7 @@ int main()
 
         }
     }while(opcao !=7 );
-    //liberararvore();
+    liberararvore(RAIZ->raiz);
     free(RAIZ);
     RAIZ=NULL;
 
