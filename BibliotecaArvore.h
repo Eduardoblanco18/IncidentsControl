@@ -251,6 +251,11 @@ Arv*remover( Arv*RAIZ, int num)
     return RAIZ;
 }
 
+void liberarArv (NoArv *pai)
+{
+
+}
+
 
 
 Lista* CriaLista()
@@ -328,6 +333,21 @@ Lista* LiberarLista(Lista *L)
     }
     free(L);
     return NULL;
+}
+
+int buscarLista(Lista *L, int valor)
+{
+    No *aux;
+    aux = L -> inicio;
+    while (aux!=NULL)
+    {
+        if (aux->info == valor) 
+        {
+            return 1;
+        }
+        aux = aux->prox;
+    }
+    return 0;
 }
 
 #endif // BIBLIOTECAARVORE_H_INCLUDED

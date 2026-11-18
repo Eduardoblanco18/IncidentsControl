@@ -70,7 +70,9 @@ int main()
         printf("\n 4 - Listar os incidentes"); // falta função
         printf("\n 5 - Excluir um incidente"); //falta função
         printf("\n 6 - Excluir um equipamento"); //falta função
-        printf("\n 7 - Sair"); //falta função
+        printf("\n 7 - Pesquisar Incidente"); //falta função
+        printf("\n 8 - Sair"); 
+
         printf("\n\n==================-------====================");
         printf("\n\nEscolha: ");
         opcao = ler_int();
@@ -127,11 +129,77 @@ int main()
         case 4:
             break;
         case 5:
+            if (ArvVazia(RAIZ))
+            {
+                printf("\nNenhum incidente para remover.\n");
+            }
+            else
+            {
+                codEqp = ler_intervalo("\nCódigo do equipamento de 1000 até 9999: ", 1000, 9999);
+                eq = BuscaEqp(TABELA, codEqp);
+                if (eq == NULL)
+                {
+                    printf("\n Equipamento %d não encontrado. \n", codEqp);
+                }
+                else
+                {
+                    id = ler_intervalo("\nQual o ID do incidente de 10 a 99? ", 10, 99);
+
+
+
+
+                    if (!buscarLista(eq->incidentes, id))
+
+
+
+
+                    {
+                        no = busca(RAIZ, id);
+                        if (no == NULL)
+                        {
+                            printf("\n Incidente %d não encontrado. \n", id);
+                        }
+                        else
+                        {
+                            printf("\n O incidente %d pertence ao equipamento %d, não ao equipamento %d. \n", id, no->incidente.codEqp, codEqp);
+
+                        }
+
+                    }
+                    else
+                    {
+                        no = busca(RAIZ, id);
+                        imprimirIncidente(no->incidente);
+                        imprimirEquipamento(eq->equipamento);
+                        RemoverLista(eq->incidentes, id);
+                        remover(RAIZ, id);
+                        printf("\nIncidente %d excluído com sucesso!\n", id);
+                    }
+                }
+            }
             break;
         case 6:
             break;
         case 7:
             break;
+        case 8:
+            id = ler_intervalo("\n Qual o ID do incidente, de 10 a 99? ", 10, 99);
+            no = busca(RAIZ, id);
+            if (no == NULL)
+            {
+                printf("\nIncidente não encontrado!\n");
+            }
+            else
+            {
+                imprimirIncidente(no->incidente);
+                eq = BuscaEqp(TABELA, no->incidente.codEqp);
+                if (eq!=NULL)
+                {
+                    imprimirEquipamento(eq->equipamento);
+                }
+            }
+            break;
+
         default:
             printf("\nOpção inválida.");
 
