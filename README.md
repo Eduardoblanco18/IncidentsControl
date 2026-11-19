@@ -1,25 +1,25 @@
 ﻿# IncidentsControl
 
--- Divisão de tarefas
+## Divisão de tarefas
 
-# Eduardo
+### Eduardo
 - Excluir um incidente.
 
 
 
-# Gustavo
+### Gustavo
 - Consultar equipamento e incidente.
 - Pesquisar incidente.
 
 
 
-# Ulisses
+### Ulisses
 - Excluir um equipamento.
 
 
--- Funcionando:
+## Funcionando:
 
-## Cadastrar Equipamento
-## Cadastrar incidente
-## Listar incidentes
-## Sair
+### Cadastrar Equipamento
+### Cadastrar incidente
+### Listar incidentes
+### Sair
