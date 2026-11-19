@@ -1,12 +1,6 @@
 #ifndef BIBLIOTECAARVORE_H_INCLUDED
 #define BIBLIOTECAARVORE_H_INCLUDED
 
-typedef struct Equipament
-{
-    int codEqp;
-    char apelido[11];
-}Eqp;
-
 typedef struct Incidents
 {
     int codUn;
@@ -26,16 +20,29 @@ typedef struct Arvore
     NoArv* raiz;
 }Arv;
 
-typedef struct no
+typedef struct noIncidentes
 {
-    int info;
-    struct no* prox;
-}No;
+    Inc info;
+    struct noIncidentes* prox;
+}NoInc;
 
-typedef struct lista
+typedef struct listaIncidentes
 {
-    No *inicio;
-}Lista;
+    NoInc *inicio;
+}ListaInc;
+
+typedef struct Equipament
+{
+    int codEqp;
+    char apelido[11];
+    ListaInc *incidentes;
+}Eqp;
+
+typedef struct NoEquipamento
+{
+    Eqp equipamento;
+    struct NoEquipamento *prox;
+}NoEqp;
 
 Arv* CriarArvore()
 {
@@ -273,18 +280,16 @@ void liberarArv (NoArv *pai)
     free(pai);
 }
 
-
-
-Lista* CriaLista()
+ListaInc* CriaLista()
 {
-    Lista *aux;
-    aux = (Lista*)malloc(sizeof(Lista));
+    ListaInc *aux;
+    aux = (ListaInc*)malloc(sizeof(ListaInc));
     aux->inicio = NULL;
     return aux;
 }
 
 
-int ListaVazia(Lista *L)
+int ListaVazia(ListaInc *L)
 {
     if(L->inicio == NULL)
     {
@@ -293,29 +298,28 @@ int ListaVazia(Lista *L)
     return 0;
 }
 
-No* AuxInsere(No *antigo, int v)
+NoInc* AuxInsere(NoInc *antigo, Inc v)
 {
-    No *novo;
-    novo = (No*)malloc(sizeof(No));
+    NoInc *novo;
+    novo = (NoInc*)malloc(sizeof(NoInc));
     novo->info = v;
     novo->prox = antigo;
     return novo;
 }
-void InsereL_inicio(Lista *velho, int valor)
+
+void InsereL_inicio(ListaInc *velho, Inc valor)
 {
     velho->inicio = AuxInsere(velho->inicio, valor);
 }
 
 
-
-
-int RemoverLista(Lista *L, int valor)
+int RemoverLista(ListaInc *L, int valor)
 {
     int removeu;
-    No *ant, *p;
+    NoInc *ant, *p;
     ant = NULL;
     p = L->inicio;
-    while(p != NULL && p->info != valor)
+    while(p != NULL && p->info.codUn != valor)
     {
         ant = p;
         p = p->prox;
@@ -340,9 +344,9 @@ int RemoverLista(Lista *L, int valor)
     return removeu;
 }
 
-Lista* LiberarLista(Lista *L)
+ListaInc* LiberarLista(ListaInc *L)
 {
-    No *apag;
+    NoInc *apag;
     while(L->inicio != NULL)
     {
         apag = L->inicio;
@@ -353,13 +357,13 @@ Lista* LiberarLista(Lista *L)
     return NULL;
 }
 
-int buscarLista(Lista *L, int valor)
+int buscarLista(ListaInc *L, int valor)
 {
-    No *aux;
+    NoInc *aux;
     aux = L -> inicio;
     while (aux!=NULL)
     {
-        if (aux->info == valor)
+        if (aux->info.codUn == valor)
         {
             return 1;
         }
@@ -373,17 +377,6 @@ int buscarLista(Lista *L, int valor)
 // TABELA HASH AQUI:
 
 #define TAM 47
-typedef struct NoEquipamento
-{
-    Eqp equipamento;
-    Lista *incidentes;
-    struct NoEquipamento *prox;
-}NoEqp;
-
-typedef struct TabelaHash
-{
-    Lista *posicao[];
-}Hash;
 
 int funcaoHash (int codigo)
 {
@@ -391,19 +384,75 @@ int funcaoHash (int codigo)
     return resto;
 }
 
-Hash* CriarHash()
+
+
+Eqp BuscaEqp(NoEqp *Hash[], int codigo)
 {
+    int pos = funcaoHash(codigo);
+    NoEqp *posHash = Hash[pos];
+    while ((posHash->equipamento.codEqp != codigo) && (posHash != NULL))
+    {
+        posHash = posHash->prox;
+    }
+    if (posHash == NULL)
+    {
+        printf("\nEquipamento Inexistente.");
+        system("Pause");
+        exit(1);
+    }
 
-    Hash *aux;
-    aux = (Hash*) malloc (sizeof(Hash));
-    aux->posicao = (NoEqp*)malloc(sizeof(Noeqp));
-
+    return posHash->equipamento;
 }
 
-NoEqp *BuscaEqp(Hash *H, int codigo)
+void adicionarEqpNaHash(NoEqp *Hash[], Eqp novoEqp)
 {
-    NoEqp *aux;
+    NoEqp *novo;
+    novo = (NoEqp*)malloc(sizeof(NoEqp));
+    novo->equipamento = novoEqp;
+    novo->prox = NULL;
 
+    int pos = funcaoHash(novoEqp.codEqp);
+    if(Hash[pos] == NULL)
+    {
+        Hash[pos] = novo;
+    }
+    else
+    {
+        NoEqp *aux = Hash[pos];
+        while(aux->prox != NULL)
+        {
+            aux = aux->prox;
+        }
+        aux->prox = novo;
+    }
+}
+
+void adicionarIncNaHash(NoEqp *Hash[], Inc novoInc)
+{
+    int pos = funcaoHash(novoInc.codEqp);
+    if (Hash[pos] == NULL)
+    {
+        printf("\nEquipamento inexistente");
+        exit(1);
+    }
+    else
+    {
+        NoEqp *aux = Hash[pos];
+        while((aux->equipamento.codEqp != novoInc.codEqp) && (aux != NULL))
+        {
+            aux = aux->prox;
+        }
+        if(aux == NULL)
+        {
+            printf("\nEquipamento não encontrado");
+            exit(1);
+        }
+        else
+        {
+            Eqp auxEqp = aux->equipamento;
+            InsereL_inicio(auxEqp.incidentes, novoInc);
+        }
+    }
 }
 
 
