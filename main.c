@@ -89,54 +89,72 @@ int main()
         switch(opcao)
         {
         case 1:
-            Eqp novo;
-            novo.codEqp = ler_intervalo("Código de Equipamento", MIN_COD_UNI, MAX_COD_UNI);
-
-            short cont = 0;
-            char name[11];
-            limpar_buffer();
-
-            do
             {
-                cont = 1;
-                printf("Nome do equipamento: ");
-                fgets(name, sizeof(name), stdin);
-                name[strcspn(name, "\n")] = '\0';
+                Eqp novo;
+                novo.codEqp = ler_intervalo("Código de Equipamento", MIN_COD_UNI, MAX_COD_UNI);
+
+                short cont = 0;
+                char name[11];
                 limpar_buffer();
-                if (strlen(name) >= 11)
-                    {
-                        printf("O código precisa ter no máximo 10 caracteres.\n");
-                        cont = 0;
-                    }
-            } while (cont == 0);
-                strcpy(novo.apelido, name);
 
-            // ADICIONAR EQUIPAMENTO NA TABELA HASH
-            break;
+                do
+                {
+                    cont = 1;
+                    printf("Nome do equipamento: ");
+                    fgets(name, sizeof(name), stdin);
+                    name[strcspn(name, "\n")] = '\0';
+                    limpar_buffer();
+                    if (strlen(name) >= 11)
+                        {
+                            printf("O código precisa ter no máximo 10 caracteres.\n");
+                            cont = 0;
+                        }
+                } while (cont == 0);
+                    strcpy(novo.apelido, name);
+
+                // ADICIONAR EQUIPAMENTO NA TABELA HASH
+                break;
+            }
         case 2:
-            Inc novoInc;
-
-            novoInc.codUn = ler_intervalo("Código Único de Indentificação", MIN_NUM_UNI, MAX_NUM_UNI);
-
-            int flag = 1;
-            do
             {
+                Inc novoInc;
+                int flag = 1;
+
                 novoInc.codEqp = ler_intervalo("Código de Equipamento", MIN_COD_UNI, MAX_COD_UNI);
 
-                /*if (codigo equip = Já existe)
+                if(BuscaEqp(Hash, novoInc.codEqp) == NULL)
                 {
-                    flag = 0;
-                }*/
-            } while (flag == 0);
+                    printf("\nCadastre o equipamento respectivo antes de cadastrar um incidente.");
+                    system("pause");
+                    system("cls");
+                    break;
+                }
 
-            novoInc.gravidade = ler_intervalo("Gravidade do Incidente", MIN_GRAVIDADE, MAX_GRAVIDADE);
+                do
+                {
+                    novoInc.codUn = ler_intervalo("Código Único de Indentificação", MIN_NUM_UNI, MAX_NUM_UNI);
 
-            //adicionar incidente na arvore
-            if(!insere(RAIZ, novoInc))
-            {
-                printf("\nNão foi possível Adicionar");
+                    if (busca(RAIZ, novoInc.codUn) != NULL)
+                    {
+                        flag = 0;
+                        printf("\nCódigo de incidente já existe. Tente outro.");
+                        system("pause");
+                    }
+                } while (flag == 0);
+
+                novoInc.gravidade = ler_intervalo("Gravidade do Incidente", MIN_GRAVIDADE, MAX_GRAVIDADE);
+
+                //adicionar incidente na arvore
+                if(!insere(RAIZ, novoInc))
+                {
+                    printf("\nNão foi possível Adicionar");
+                }
+
+                //Adicionar no equipamento respectivo
+                int auxPos = funcaoHash(novoInc.codEqp);
+                InsereL_inicio(Hash[auxPos]->equipamento.incidentes, novoInc);
+                break;
             }
-            break;
         case 3:
             break;
         case 4:
@@ -152,31 +170,23 @@ int main()
             }
             else
             {
-                int codEqp = ler_intervalo("\nCódigo do equipamento de 1000 até 9999: ", MIN_COD_UNI, MAX_COD_UNI);
-                Eqp eq = BuscaEqp(Hash, codEqp);
-                int id = ler_intervalo("\nQual o ID do incidente de 10 a 99? ", MIN_NUM_UNI, MAX_NUM_UNI);
-                if (!buscarLista(eq.incidentes, id))
+                id = ler_intervalo("Qual é o código do incidente?", MIN_NUM_UNI, MAX_NUM_UNI);
+                NoArv *aux = busca(RAIZ, id);
+                if (aux != NULL)
                 {
-                    no = busca(RAIZ, id);
-                    if (no == NULL)
+                    Inc auxInc = aux->incidente;
+                    int auxPos = funcaoHash(auxInc.codEqp);
+                    remover(RAIZ, auxInc.codUn);
+                    NoEqp *auxEqp = Hash[auxPos];
+                    while(auxEqp->equipamento.codEqp != auxInc.codEqp)
                     {
-                        printf("\n Incide   nte %d não encontrado. \n", id);
+                        auxEqp = auxEqp->prox;
                     }
-                    else
-                    {
-                        printf("\n O incidente %d pertence ao equipamento %d, não ao equipamento %d. \n", id, no->incidente.codEqp, codEqp);
-
-                    }
-
+                    RemoverLista(auxEqp->equipamento.incidentes, auxInc.codUn);
                 }
                 else
                 {
-                    no = busca(RAIZ, id);
-                    imprimirIncidente(no->incidente);
-                    //imprimirEquipamento(eq);    FAZER!!!!
-                    RemoverLista(eq.incidentes, id);
-                    remover(RAIZ, id);
-                    printf("\nIncidente %d excluído com sucesso!\n", id);
+                    printf("\nIncidente inexistente.");
                 }
             }
             break;
@@ -192,7 +202,7 @@ int main()
             else
             {
                 imprimirIncidente(no->incidente);
-                Eqp eq = BuscaEqp(Hash, no->incidente.codEqp);
+                //Eqp eq = BuscaEqp(Hash, no->incidente.codEqp);
                 //imprimirEquipamento(eq->equipamento); FAZER!!!!!!!!!
             }
             break;

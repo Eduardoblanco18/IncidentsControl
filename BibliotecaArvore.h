@@ -195,7 +195,7 @@ void imprimir (Arv *RAIZ)
     imprimirOrdemArv(RAIZ->raiz);
 }
 
-NoArv*remover_aux(NoArv*pai, int num)
+NoArv* remover_aux(NoArv*pai, int num)
 {
     if(pai==NULL)
     {
@@ -258,7 +258,7 @@ NoArv*remover_aux(NoArv*pai, int num)
     return pai;
 }
 
-Arv*remover( Arv*RAIZ, int num)
+Arv* remover(Arv* RAIZ, int num)
 {
     if (!ArvVazia(RAIZ))
     {
@@ -384,24 +384,22 @@ int funcaoHash (int codigo)
     return resto;
 }
 
-
-
-Eqp BuscaEqp(NoEqp *Hash[], int codigo)
+Eqp *BuscaEqp(NoEqp *Hash[], int codigo)
 {
     int pos = funcaoHash(codigo);
     NoEqp *posHash = Hash[pos];
-    while ((posHash->equipamento.codEqp != codigo) && (posHash != NULL))
+    while ((posHash != NULL) && (posHash->equipamento.codEqp != codigo))
     {
         posHash = posHash->prox;
     }
     if (posHash == NULL)
     {
-        printf("\nEquipamento Inexistente.");
-        system("Pause");
-        exit(1);
+        //printf("\nEquipamento Inexistente.");
+        //system("Pause");
+        return NULL;
     }
 
-    return posHash->equipamento;
+    return &posHash->equipamento;
 }
 
 void adicionarEqpNaHash(NoEqp *Hash[], Eqp novoEqp)

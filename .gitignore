@@ -1,0 +1,16 @@
+
+# Arquivos compilados
+*.o
+*.obj
+
+# Executáveis
+*.exe
+*.out
+
+# Arquivos de depuração
+*.pdb
+*.ilk
+
+# Arquivos temporários
+*.tmp
+*.log
