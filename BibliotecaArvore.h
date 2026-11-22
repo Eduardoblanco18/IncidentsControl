@@ -269,15 +269,19 @@ Arv* remover(Arv* RAIZ, int num)
 
 void liberarArv (NoArv *pai)
 {
-    if(pai->dir != NULL)
+    if(pai != NULL)
     {
-        liberarArv(pai->dir);
+        if(pai->dir != NULL)
+        {
+            liberarArv(pai->dir);
+        }
+        if(pai->esq != NULL)
+        {
+            liberarArv(pai->esq);
+        }
+
+        free(pai);
     }
-    if(pai->esq != NULL)
-    {
-        liberarArv(pai->esq);
-    }
-    free(pai);
 }
 
 ListaInc* CriaLista()
@@ -451,6 +455,40 @@ void adicionarIncNaHash(NoEqp *Hash[], Inc novoInc)
             InsereL_inicio(auxEqp.incidentes, novoInc);
         }
     }
+}
+
+void removerEqpDaHash(NoEqp *Hash[], int codEqp, Arv *raiz)
+{
+    NoEqp *aux, *apag;
+    int pos = funcaoHash(codEqp);
+    apag = Hash[pos];
+    if(apag->equipamento.codEqp == codEqp)
+    {
+        Hash[pos] = apag->prox;
+    }
+    else
+    {
+        while(apag->equipamento.codEqp != codEqp)
+        {
+            aux = apag;
+            apag = apag->prox;
+        }
+        aux->prox = apag->prox;
+    }
+
+    ListaInc *listaAuxInc = apag->equipamento.incidentes;
+    NoInc *noAuxInc;
+
+    while(listaAuxInc->inicio != NULL)
+    {
+        noAuxInc = listaAuxInc->inicio;
+        listaAuxInc->inicio = noAuxInc->prox;
+        raiz = remover(raiz, noAuxInc->info.codUn);
+        free(noAuxInc);
+    }
+
+    free(listaAuxInc);
+    free(apag);
 }
 
 

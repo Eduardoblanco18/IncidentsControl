@@ -110,9 +110,11 @@ int main()
                             cont = 0;
                         }
                 } while (cont == 0);
-                    strcpy(novo.apelido, name);
+                strcpy(novo.apelido, name);
+                novo.incidentes = CriaLista();
 
                 // ADICIONAR EQUIPAMENTO NA TABELA HASH
+                adicionarEqpNaHash(Hash, novo);
                 break;
             }
         case 2:
@@ -120,7 +122,7 @@ int main()
                 Inc novoInc;
                 int flag = 1;
 
-                novoInc.codEqp = ler_intervalo("Código de Equipamento", MIN_COD_UNI, MAX_COD_UNI);
+                novoInc.codEqp = ler_intervalo("Código de Equipamento: ", MIN_COD_UNI, MAX_COD_UNI);
 
                 if(BuscaEqp(Hash, novoInc.codEqp) == NULL)
                 {
@@ -132,22 +134,22 @@ int main()
 
                 do
                 {
-                    novoInc.codUn = ler_intervalo("Código Único de Indentificação", MIN_NUM_UNI, MAX_NUM_UNI);
+                    novoInc.codUn = ler_intervalo("Código Único de Indentificação: ", MIN_NUM_UNI, MAX_NUM_UNI);
 
                     if (busca(RAIZ, novoInc.codUn) != NULL)
                     {
                         flag = 0;
-                        printf("\nCódigo de incidente já existe. Tente outro.");
+                        printf("\nCódigo de incidente já existe. Tente outro.\n");
                         system("pause");
                     }
                 } while (flag == 0);
 
-                novoInc.gravidade = ler_intervalo("Gravidade do Incidente", MIN_GRAVIDADE, MAX_GRAVIDADE);
+                novoInc.gravidade = ler_intervalo("Gravidade do Incidente: ", MIN_GRAVIDADE, MAX_GRAVIDADE);
 
                 //adicionar incidente na arvore
                 if(!insere(RAIZ, novoInc))
                 {
-                    printf("\nNão foi possível Adicionar");
+                    printf("\nNão foi possível Adicionar\n");
                 }
 
                 //Adicionar no equipamento respectivo
@@ -170,7 +172,7 @@ int main()
             }
             else
             {
-                id = ler_intervalo("Qual é o código do incidente?", MIN_NUM_UNI, MAX_NUM_UNI);
+                id = ler_intervalo("\nQual é o código do incidente?", MIN_NUM_UNI, MAX_NUM_UNI);
                 NoArv *aux = busca(RAIZ, id);
                 if (aux != NULL)
                 {
@@ -191,6 +193,14 @@ int main()
             }
             break;
         case 6:
+            codEquip = ler_intervalo("\nQual é o código do Equipamento", MIN_COD_UNI, MAX_COD_UNI);
+            if(BuscaEqp(Hash, codEquip) != NULL)
+            {
+                removerEqpDaHash(Hash, codEquip, RAIZ);
+            }
+            printf("\nEquipamento e incidentes apagados com sucesso!\n");
+            system("Pause");
+            system("cls");
             break;
         case 7:
             id = ler_intervalo("\n Qual o ID do incidente, de 10 a 99? ", MIN_NUM_UNI, MAX_NUM_UNI);
@@ -207,16 +217,16 @@ int main()
             }
             break;
         case 8:
+            printf("\nSaindo\n");
+            system("pause");
             break;
 
         default:
-            printf("\nOpção inválida.");
-
-
+            printf("\nOpção inválida.\n");
+            System("pause");
+            system("cls");
         }
     }while(opcao !=8 );
-    printf("Saindo");
-    system("pause");
     liberarArv(RAIZ->raiz);
     free(RAIZ);
 }
