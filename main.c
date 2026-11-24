@@ -223,10 +223,11 @@ int main()
 
         default:
             printf("\nOpção inválida.\n");
-            System("pause");
+            system("pause");
             system("cls");
         }
     }while(opcao !=8 );
     liberarArv(RAIZ->raiz);
+    liberarHash(Hash);
     free(RAIZ);
 }

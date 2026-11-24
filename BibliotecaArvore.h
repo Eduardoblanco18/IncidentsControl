@@ -302,13 +302,30 @@ int ListaVazia(ListaInc *L)
     return 0;
 }
 
-NoInc* AuxInsere(NoInc *antigo, Inc v)
+NoInc* AuxInsere(NoInc *velho, Inc v)
 {
     NoInc *novo;
-    novo = (NoInc*)malloc(sizeof(NoInc));
+    novo = (NoInc*) malloc(sizeof(NoInc));
     novo->info = v;
-    novo->prox = antigo;
-    return novo;
+    novo->prox = NULL;
+    NoInc *antigo = NULL;
+    NoInc *proximo = velho;
+
+    while((proximo != NULL) &&(v.codUn > proximo->info.codUn))
+    {
+        antigo = proximo;
+        proximo = proximo->prox;
+    }
+    novo->prox = proximo;
+    if(antigo == NULL)
+    {
+        return novo;
+    }
+    else
+    {
+        antigo->prox = novo;
+        return velho;
+    }
 }
 
 void InsereL_inicio(ListaInc *velho, Inc valor)
@@ -491,7 +508,21 @@ void removerEqpDaHash(NoEqp *Hash[], int codEqp, Arv *raiz)
     free(apag);
 }
 
-
+void liberarHash(NoEqp *Hash[])
+{
+    NoEqp *aux, *apag;
+    for(int i = 0; i <TAM; i++)
+    {
+        aux = Hash[i];
+        while(aux != NULL)
+        {
+            LiberarLista(aux->equipamento.incidentes);
+            apag = aux;
+            aux = aux->prox;
+            free(apag);
+        }
+    }
+}
 
 
 
