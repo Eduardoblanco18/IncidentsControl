@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <string.h>
+#include <windows.h>
 #include "BibliotecaArvore.h"
 #define MAX_COD_UNI 9999
 #define MIN_COD_UNI 1000
@@ -55,7 +56,9 @@ int ler_intervalo(char texto[], int min, int max)
 
 int main()
 {
-    setlocale(LC_ALL, "portuguese");
+    SetConsoleOutputCP(CP_UTF8);
+
+    setlocale(LC_ALL, ".UTF-8");
 
     NoEqp *Hash[TAM] = {NULL};
     /*for(int i = 0; i < TAM; i++)
@@ -158,6 +161,14 @@ int main()
                 break;
             }
         case 3:
+            codEquip = ler_intervalo("Qual é o código do Equipamento: ", MIN_COD_UNI, MAX_COD_UNI);
+            if(BuscaEqp(Hash, codEquip) != NULL)
+            {
+                Eqp *EqpProcura = BuscaEqp(Hash, codEquip);
+                imprimirEquipamento(EqpProcura);
+                printf("\nIncidentes relacionados:\n");
+                imprimirLista(EqpProcura->incidentes);
+            }
             break;
         case 4:
             if(!ArvVazia(RAIZ))
@@ -212,8 +223,9 @@ int main()
             else
             {
                 imprimirIncidente(no->incidente);
-                //Eqp eq = BuscaEqp(Hash, no->incidente.codEqp);
-                //imprimirEquipamento(eq->equipamento); FAZER!!!!!!!!!
+                Eqp *eq = BuscaEqp(Hash, no->incidente.codEqp);
+                printf("Equipamento relacionado:");
+                imprimirEquipamento(eq);
             }
             break;
         case 8:

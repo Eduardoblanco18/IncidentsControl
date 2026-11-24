@@ -393,6 +393,16 @@ int buscarLista(ListaInc *L, int valor)
     return 0;
 }
 
+void imprimirLista(ListaInc *L)
+{
+    NoInc *aux = L->inicio;
+    while(aux != NULL)
+    {
+        imprimirIncidente(aux->info);
+        aux = aux->prox;
+    }
+}
+
 
 
 // TABELA HASH AQUI:
@@ -506,6 +516,11 @@ void removerEqpDaHash(NoEqp *Hash[], int codEqp, Arv *raiz)
 
     free(listaAuxInc);
     free(apag);
+}
+
+void imprimirEquipamento(Eqp *aux)
+{
+    printf("\nCódigo do Equipamento: %d  |  Apelido: %s", aux->codEqp, aux->apelido);
 }
 
 void liberarHash(NoEqp *Hash[])
