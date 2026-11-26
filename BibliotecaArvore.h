@@ -328,7 +328,7 @@ NoInc* AuxInsere(NoInc *velho, Inc v)
     }
 }
 
-void InsereL_inicio(ListaInc *velho, Inc valor)
+void InsereLista(ListaInc *velho, Inc valor)
 {
     velho->inicio = AuxInsere(velho->inicio, valor);
 }
@@ -425,12 +425,10 @@ Eqp *BuscaEqp(NoEqp *Hash[], int codigo)
     }
     if (posHash == NULL)
     {
-        //printf("\nEquipamento Inexistente.");
-        //system("Pause");
         return NULL;
     }
 
-    return &posHash->equipamento;
+    return &(posHash->equipamento);
 }
 
 void adicionarEqpNaHash(NoEqp *Hash[], Eqp novoEqp)
@@ -479,7 +477,7 @@ void adicionarIncNaHash(NoEqp *Hash[], Inc novoInc)
         else
         {
             Eqp auxEqp = aux->equipamento;
-            InsereL_inicio(auxEqp.incidentes, novoInc);
+            InsereLista(auxEqp.incidentes, novoInc);
         }
     }
 }
@@ -506,7 +504,7 @@ void removerEqpDaHash(NoEqp *Hash[], int codEqp, Arv *raiz)
     ListaInc *listaAuxInc = apag->equipamento.incidentes;
     NoInc *noAuxInc;
 
-    while(listaAuxInc->inicio != NULL)
+    while(!ListaVazia(listaAuxInc))
     {
         noAuxInc = listaAuxInc->inicio;
         listaAuxInc->inicio = noAuxInc->prox;
