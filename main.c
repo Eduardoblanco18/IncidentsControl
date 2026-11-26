@@ -18,6 +18,13 @@ void limpar_buffer()
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
+void limpa_tela()
+{
+    printf("\n");
+    system("Pause");
+    system("cls");
+}
+
 int ler_int()
 {
     int num, flag;
@@ -116,8 +123,9 @@ int main()
                 strcpy(novo.apelido, name);
                 novo.incidentes = CriaLista();
 
-                // ADICIONAR EQUIPAMENTO NA TABELA HASH
                 adicionarEqpNaHash(Hash, novo);
+
+                limpa_tela();
                 break;
             }
         case 2:
@@ -149,32 +157,49 @@ int main()
 
                 novoInc.gravidade = ler_intervalo("Gravidade do Incidente: ", MIN_GRAVIDADE, MAX_GRAVIDADE);
 
-                //adicionar incidente na arvore
                 if(!insere(RAIZ, novoInc))
                 {
                     printf("\nNão foi possível Adicionar\n");
                 }
 
-                //Adicionar no equipamento respectivo
                 int auxPos = funcaoHash(novoInc.codEqp);
                 InsereL_inicio(Hash[auxPos]->equipamento.incidentes, novoInc);
+
+                limpa_tela();
                 break;
             }
         case 3:
-            codEquip = ler_intervalo("Qual é o código do Equipamento: ", MIN_COD_UNI, MAX_COD_UNI);
+            codEquip = ler_intervalo("\nQual é o código do Equipamento: ", MIN_COD_UNI, MAX_COD_UNI);
             if(BuscaEqp(Hash, codEquip) != NULL)
             {
                 Eqp *EqpProcura = BuscaEqp(Hash, codEquip);
                 imprimirEquipamento(EqpProcura);
                 printf("\nIncidentes relacionados:\n");
-                imprimirLista(EqpProcura->incidentes);
+                if(!ListaVazia(EqpProcura->incidentes))
+                {
+                    imprimirLista(EqpProcura->incidentes);
+                }
+                else
+                {
+                    printf("\nNenhum incidente relacionado");
+                }
             }
+            else
+            {
+                printf("\nEquipamento inexistente!");
+            }
+            limpa_tela();
             break;
         case 4:
             if(!ArvVazia(RAIZ))
             {
                 imprimirOrdemArv(RAIZ->raiz);
             }
+            else
+            {
+                printf("\nNenhum Incidente cadastrado.");
+            }
+            limpa_tela();
             break;
         case 5:
             if (ArvVazia(RAIZ))
@@ -196,12 +221,14 @@ int main()
                         auxEqp = auxEqp->prox;
                     }
                     RemoverLista(auxEqp->equipamento.incidentes, auxInc.codUn);
+                    printf("\nIncidente apagado com sucesso.");
                 }
                 else
                 {
                     printf("\nIncidente inexistente.");
                 }
             }
+            limpa_tela();
             break;
         case 6:
             codEquip = ler_intervalo("\nQual é o código do Equipamento", MIN_COD_UNI, MAX_COD_UNI);
@@ -210,8 +237,7 @@ int main()
                 removerEqpDaHash(Hash, codEquip, RAIZ);
             }
             printf("\nEquipamento e incidentes apagados com sucesso!\n");
-            system("Pause");
-            system("cls");
+            limpa_tela();
             break;
         case 7:
             id = ler_intervalo("\n Qual o ID do incidente, de 10 a 99? ", MIN_NUM_UNI, MAX_NUM_UNI);
@@ -227,6 +253,7 @@ int main()
                 printf("Equipamento relacionado:");
                 imprimirEquipamento(eq);
             }
+            limpa_tela();
             break;
         case 8:
             printf("\nSaindo\n");
